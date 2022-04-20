@@ -33,6 +33,8 @@ router.get('/flat/:id', async(req, res) => {
 
 router.get('/flats', async (req, res) => {
     try{ 
+
+        // console.log("check")
         const page = req.query.page || 1
         const limit = req.query.limit || 8
         let flats = await Flat.find().skip((page - 1)  *limit).limit(limit).lean().exec()
@@ -43,9 +45,12 @@ router.get('/flats', async (req, res) => {
         const totalPages = (Math.ceil(totalDocs / limit))
 
         let arr = [];
-         for(let i = 1; i<= totalPages; i++) { 
+
+        // console.log({flats})
+         for(let i = 1; i<= totalPages; i++) {
 
             arr.push(i);
+         }
 
             if(req.query.q) {
                 if(req.query.q == 'sort') {
@@ -59,11 +64,11 @@ router.get('/flats', async (req, res) => {
                     flats = flats.filter(flat => flat.block == req.query.block)
                 }
             }
-
+            // console.log({flats})
             return res.status(200).send({
                 flats, totalPages : arr
             })
-         } 
+         
     } catch (error ) {
         return res.status(500).send({message : error.message})
     }
